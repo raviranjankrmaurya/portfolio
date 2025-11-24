@@ -913,3 +913,22 @@ body {
         display: inline-flex;
     }
 }
+/* Console (input + output) */
+.console-box {
+  width: 100%;
+  min-height: 140px;
+  padding: 10px;
+  background: #111;
+  color: #00ff66;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  resize: vertical;
+  white-space: pre-wrap;
+  box-sizing: border-box;
+}
+
+.output-box {
+  margin-top: 12px;
+}
