@@ -131,7 +131,13 @@ app.post("/run", async (req, res) => {
     });
   }
 });
-
+app.get("/test-env", (req, res) => {
+  res.json({
+    BASE_URL: process.env.JUDGE0_BASE_URL,
+    HOST: process.env.JUDGE0_HOST,
+    KEY_EXISTS: process.env.JUDGE0_API_KEY ? "YES" : "NO"
+  });
+});
 // fallback (optional)
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
