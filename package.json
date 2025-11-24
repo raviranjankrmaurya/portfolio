@@ -9,6 +9,6 @@
     "express": "^4.19.0",
     "axios": "^1.6.0",
     "cors": "^2.8.5",
-    "node-fatch":"^3.3.2"
+    "node-fatch":"^2.6.7"
   }
 }
