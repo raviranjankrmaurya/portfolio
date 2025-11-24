@@ -360,16 +360,21 @@
                         </div>
                     </div>
 
-                    <pre class="code-block">
-<code id="codeBlock" class="language-cpp"></code>
-                    </pre>
+                    <!-- Code display + editor -->
+<div class="code-display">
+  <pre id="codeBlock" class="code-block"><code class="language-cpp"></code></pre>
+  <textarea id="codeEditor" class="code-editor hidden"></textarea>
+</div>
 
-                    <textarea id="codeEditor" class="code-editor hidden"></textarea>
-
-                    <div id="outputBox" class="output-box hidden">
-                        <div class="output-title">Program Output</div>
-                        <pre id="outputText"></pre>
-                    </div>
+<!-- Console (Input + Output same jagah) -->
+<div id="outputBox" class="output-box">
+  <div class="output-title">Console (Input & Output)</div>
+  <textarea
+    id="consoleBox"
+    class="console-box"
+    placeholder="Yahan input likho (stdin)...&#10;Run ke baad yahi pe output dikhega."
+  ></textarea>
+</div>
                 </div>
             </div>
         </div>
