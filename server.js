@@ -1,4 +1,4 @@
-// server.js  (CommonJS version – Render + Judge0 ready)
+// server.js  (CommonJS version – Render + Judge0 with polling)
 
 const express = require("express");
 const cors = require("cors");
@@ -13,7 +13,7 @@ const JUDGE0_API_KEY = process.env.JUDGE0_API_KEY || "";
 
 // ---- Express app ----
 const app = express();
-const PORT = process.env.PORT || 10000; // Render apna port env se deta hai
+const PORT = process.env.PORT || 10000; // Render port
 
 app.use(cors());
 app.use(express.json());
@@ -56,27 +56,64 @@ app.post("/run", async (req, res) => {
       stdin: stdin || "",
     };
 
-    const url = `${JUDGE0_BASE_URL}/submissions?base64_encoded=false&wait=true`;
-
     const headers = {
       "Content-Type": "application/json",
       "X-RapidAPI-Key": JUDGE0_API_KEY,
       "X-RapidAPI-Host": JUDGE0_HOST,
     };
 
-    // Node 18+ me global fetch hota hai
-    const response = await fetch(url, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(payload),
-    });
+    // 1️⃣ Pehle submission create karo (wait = false) → token milega
+    const submitRes = await fetch(
+      `${JUDGE0_BASE_URL}/submissions?base64_encoded=false&wait=false`,
+      {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      }
+    );
 
-    const data = await response.json();
+    const submitData = await submitRes.json();
+    const token = submitData.token;
 
-    const status = data.status && data.status.description;
-    const stdout = (data.stdout || "").trim();
-    const stderr = (data.stderr || "").trim();
-    const compileOutput = (data.compile_output || "").trim();
+    if (!token) {
+      return res.status(500).json({
+        success: false,
+        error: "No token received from Judge0.",
+      });
+    }
+
+    // 2️⃣ Ab result ke liye poll karo
+    let result;
+    const started = Date.now();
+    const timeoutMs = 15000; // 15 sec max
+
+    while (true) {
+      const resultRes = await fetch(
+        `${JUDGE0_BASE_URL}/submissions/${token}?base64_encoded=false`,
+        { headers }
+      );
+      result = await resultRes.json();
+
+      // 1 = In Queue, 2 = Processing, >2 = finished
+      if (result.status && typeof result.status.id === "number" && result.status.id > 2) {
+        break;
+      }
+
+      if (Date.now() - started > timeoutMs) {
+        return res.status(500).json({
+          success: false,
+          error: "Execution timeout while waiting for Judge0.",
+        });
+      }
+
+      // 1 second wait then check again
+      await new Promise((r) => setTimeout(r, 1000));
+    }
+
+    const status = result.status && result.status.description;
+    const stdout = (result.stdout || "").trim();
+    const stderr = (result.stderr || "").trim();
+    const compileOutput = (result.compile_output || "").trim();
 
     let output = "";
     if (status) output += `Status: ${status}\n\n`;
