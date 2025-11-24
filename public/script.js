@@ -231,11 +231,22 @@ downloadButton.addEventListener("click", () => {
 
 // ===== Run via backend /run (online compiler API) =====
 runButton.addEventListener("click", async () => {
+  // language mapping meta check
   if (!currentFileMeta || !currentFileMeta.runLang) return;
 
+  // code editor / view se current code lo
+  const isEditing = !codeEditor.classList.contains("hidden");
   const currentCode = isEditing ? codeEditor.value : codeBlock.textContent;
-  outputBox.classList.remove("hidden");
-  outputText.textContent = "Running...";
+
+  // console box (jahan user input likhega + output dekhega)
+  const consoleBox = document.getElementById("consoleBox");
+  const inputData = consoleBox ? consoleBox.value : "";
+
+  // Run se pehle status dikhao
+  if (consoleBox) {
+    consoleBox.value =
+      (inputData ? "▶️ Input:\n" + inputData + "\n\n" : "") + "⏳ Running...\n";
+  }
 
   try {
     const res = await fetch("/run", {
@@ -244,18 +255,31 @@ runButton.addEventListener("click", async () => {
       body: JSON.stringify({
         language: currentFileMeta.runLang, // "cpp", "c", "java", "python", "javascript"
         code: currentCode,
-        stdin: ""
+        stdin: inputData
       })
     });
 
     const data = await res.json();
-    if (res.ok && data.success) {
-      outputText.textContent = data.output;
-    } else {
-      outputText.textContent = data.error || "Execution error.";
+
+    if (consoleBox) {
+      if (res.ok && data.success) {
+        consoleBox.value =
+          (inputData ? "▶️ Input:\n" + inputData + "\n\n" : "") +
+          "✅ Output:\n" +
+          (data.output || "(no output)");
+      } else {
+        consoleBox.value =
+          (inputData ? "▶️ Input:\n" + inputData + "\n\n" : "") +
+          "❌ Error:\n" +
+          (data.error || "Execution error.");
+      }
     }
   } catch (err) {
     console.error(err);
-    outputText.textContent = "Network / server error.";
+    if (consoleBox) {
+      consoleBox.value =
+        (inputData ? "▶️ Input:\n" + inputData + "\n\n" : "") +
+        "❌ Network / server error.";
+    }
   }
 });
