@@ -15,11 +15,12 @@ app.use(express.static(path.join(__dirname, "public")));
 // Many providers require an API key and a specific auth header name.
 // Put those in environment variables when you deploy, or edit below.
 
+// RapidAPI Judge0 CE config
 const JUDGE0_BASE_URL =
-  process.env.JUDGE0_BASE_URL || "https://YOUR_JUDGE0_BASE_URL";
-const JUDGE0_API_KEY = process.env.JUDGE0_API_KEY || "YOUR_API_KEY_IF_NEEDED";
-const JUDGE0_AUTH_HEADER_NAME =
-  process.env.JUDGE0_AUTH_HEADER_NAME || "X-Auth-Token";
+  process.env.JUDGE0_BASE_URL || "https://judge0-ce.p.rapidapi.com";
+const JUDGE0_API_KEY = process.env.JUDGE0_API_KEY || "";
+const JUDGE0_HOST =
+  process.env.JUDGE0_HOST || "judge0-ce.p.rapidapi.com";
 
 // Map frontend language keys -> Judge0 language IDs
 // NOTE: These IDs are EXAMPLES. You must check /languages on your Judge0 instance.
@@ -57,13 +58,15 @@ app.post("/run", async (req, res) => {
     };
 
     const url = `${JUDGE0_BASE_URL}/submissions?base64_encoded=false&wait=true`;
-    const headers = {
-      "Content-Type": "application/json",
-    };
 
-    if (JUDGE0_API_KEY && JUDGE0_AUTH_HEADER_NAME) {
-      headers[JUDGE0_AUTH_HEADER_NAME] = JUDGE0_API_KEY;
-    }
+const headers = {
+  "Content-Type": "application/json",
+};
+
+if (JUDGE0_API_KEY) {
+  headers["X-RapidAPI-Key"] = JUDGE0_API_KEY;
+  headers["X-RapidAPI-Host"] = JUDGE0_HOST;
+}
 
     // Node 18+ has global fetch. If you're on older Node, install node-fetch and use that.
     const response = await fetch(url, {
