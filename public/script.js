@@ -1,445 +1,652 @@
-// ========= NAVBAR, THEME, BASIC ==========
-
-const navToggle = document.getElementById("navToggle");
-const nav = document.getElementById("nav");
-const themeToggle = document.getElementById("themeToggle");
-
-// mobile nav
-navToggle.addEventListener("click", () => {
-  nav.classList.toggle("open");
-});
-
-// close nav on link click (mobile)
-nav.querySelectorAll("a").forEach((link) => {
-  link.addEventListener("click", () => nav.classList.remove("open"));
-});
-
-// scroll active link
-const sections = document.querySelectorAll("section[id]");
-const navLinks = document.querySelectorAll(".nav a");
-
-function onScroll() {
-  const scrollPos = window.scrollY + 120;
-  sections.forEach((sec) => {
-    if (scrollPos >= sec.offsetTop && scrollPos < sec.offsetTop + sec.offsetHeight) {
-      navLinks.forEach((l) => l.classList.remove("active"));
-      const active = document.querySelector(`.nav a[href="#${sec.id}"]`);
-      if (active) active.classList.add("active");
-    }
-  });
-}
-window.addEventListener("scroll", onScroll);
-
-// year
-document.getElementById("year").textContent = new Date().getFullYear();
-
-// theme toggle (dark / light)
-const body = document.body;
-themeToggle.addEventListener("click", () => {
-  body.classList.toggle("light");
-  themeToggle.textContent = body.classList.contains("light") ? "☀️" : "🌙";
-});
-
-// ========= HERO ANIMATIONS (name typing + image floating) ==========
-
-const heroNameEl = document.getElementById("heroName");
-const heroImage = document.getElementById("heroImage");
-
-const nameText = "Hi, I'm Raviranjan Kumar";
-let typeIndex = 0;
-
-function typeHeroName() {
-  if (typeIndex <= nameText.length) {
-    heroNameEl.textContent = nameText.slice(0, typeIndex);
-    typeIndex++;
-    setTimeout(typeHeroName, 80);
-  } else {
-    // final pretty version with span
-    heroNameEl.innerHTML =
-      `Hi, I'm <span class="hero-name-highlight">Raviranjan Kumar</span>`;
-  }
-}
-typeHeroName();
-
-// floating animation on image
-let t = 0;
-function floatImage() {
-  t += 0.03;
-  const y = Math.sin(t) * 6; // -6 .. +6 px
-  heroImage.style.transform = `translateY(${y}px)`;
-  requestAnimationFrame(floatImage);
-}
-requestAnimationFrame(floatImage);
-
-// ========= CONTACT FORM -> /contact API ==========
-
-const contactForm = document.getElementById("contactForm");
-const formStatus = document.getElementById("formStatus");
-
-contactForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  formStatus.textContent = "Sending...";
-
-  const payload = {
-    name: contactForm.name.value.trim(),
-    email: contactForm.email.value.trim(),
-    message: contactForm.message.value.trim(),
-  };
-
-  try {
-    const res = await fetch("/contact", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json().catch(() => ({}));
-
-    if (res.ok) {
-      formStatus.textContent = "Message sent successfully!";
-      contactForm.reset();
-    } else {
-      formStatus.textContent = data.error || "Something went wrong.";
-    }
-  } catch (err) {
-    console.error(err);
-    formStatus.textContent = "Network error. Please try again.";
-  }
-});
-
-// ========= CODE LIBRARY + ONLINE COMPILER ==========
-
-// SNIPPETS: yahan apne saare programs add/extend kar sakte ho.
-// needsInput: true  => INPUT textarea active
-// needsInput: false => INPUT readonly, direct OUTPUT
-const SNIPPETS = {
-  cpp: [
-    {
-      id: "cpp-hello",
-      fileName: "hello_world.cpp",
-      lang: "C++",
-      prismLang: "cpp",
-      runLang: "cpp",
-      needsInput: false,
-      code: `#include <bits/stdc++.h>
-using namespace std;
-int main() {
-    cout << "Hello, World from C++!"; 
-    return 0;
-}`
-    },
-    {
-      id: "cpp-sum",
-      fileName: "sum_two_numbers.cpp",
-      lang: "C++",
-      prismLang: "cpp",
-      runLang: "cpp",
-      needsInput: true,
-      code: `#include <bits/stdc++.h>
-using namespace std;
-int main() {
-    int a, b;
-    cin >> a >> b;
-    cout << (a + b);
-    return 0;
-}`
-    }
-  ],
-  c: [
-    {
-      id: "c-hello",
-      fileName: "hello_world.c",
-      lang: "C",
-      prismLang: "c",
-      runLang: "c",
-      needsInput: false,
-      code: `#include <stdio.h>
-int main() {
-    printf("Hello, World from C!");
-    return 0;
-}`
-    }
-  ],
-  java: [
-    {
-      id: "java-binarysearch",
-      fileName: "BinarySearch.java",
-      lang: "Java",
-      prismLang: "java",
-      runLang: "java",
-      needsInput: true,
-      code: `import java.util.*;
-public class BinarySearch {
-    public static int binarySearch(int[] arr, int target) {
-        int low = 0, high = arr.length - 1;
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            if (arr[mid] == target) return mid;
-            if (arr[mid] < target) low = mid + 1;
-            else high = mid - 1;
-        }
-        return -1;
-    }
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        int n = sc.nextInt();
-        int[] arr = new int[n];
-        for (int i=0;i<n;i++) arr[i] = sc.nextInt();
-        int target = sc.nextInt();
-        int idx = binarySearch(arr, target);
-        if (idx == -1) System.out.println("Not found");
-        else System.out.println("Found at index " + idx);
-    }
-}`
-    }
-  ],
-  python: [
-    {
-      id: "py-hello",
-      fileName: "hello_world.py",
-      lang: "Python",
-      prismLang: "python",
-      runLang: "python",
-      needsInput: false,
-      code: `print("Hello, World from Python!")`
-    }
-  ],
-  javascript: [
-    {
-      id: "js-hello",
-      fileName: "hello_world.js",
-      lang: "JavaScript",
-      prismLang: "javascript",
-      runLang: "javascript",
-      needsInput: false,
-      code: `console.log("Hello, World from JavaScript!");`
-    }
-  ]
+// ====== LANGUAGE CONFIG ======
+const LANGS = {
+  c: { label: "C", runLang: "c" },
+  cpp: { label: "C++", runLang: "cpp" },
+  java: { label: "Java", runLang: "java" },
+  python: { label: "Python", runLang: "python" },
+  javascript: { label: "JavaScript", runLang: "javascript" },
 };
 
-// DOM references
-const folderCards = document.querySelectorAll(".folder-card");
-const fileList = document.getElementById("fileList");
-const currentFolderName = document.getElementById("currentFolderName");
-const currentFolderCount = document.getElementById("currentFolderCount");
+// ====== LOCALSTORAGE KEY NAMES ======
+const LS_USERS_KEY = "raviranjan_users";
+const LS_CURRENT_USER_KEY = "raviranjan_current_user";
+const FS_ROOT_KEY = "raviranjan"; // ⭐ yahi "memory file" hai jisme sab code hai
 
-const viewerPlaceholder = document.getElementById("viewerPlaceholder");
-const codeContainer = document.getElementById("codeContainer");
-const codeBlock = document.getElementById("codeBlock");
-const codeEditor = document.getElementById("codeEditor");
-const fileNameLabel = document.getElementById("fileNameLabel");
-const fileLangLabel = document.getElementById("fileLangLabel");
-const runButton = document.getElementById("runButton");
-const downloadButton = document.getElementById("downloadButton");
-const editButton = document.getElementById("editButton");
+// ====== STATE ======
+let currentUser = null; // { name, email, dob, password }
+let currentLang = "c";
+let currentFiles = []; // all files for current user (all langs)
+let currentFileId = null;
 
-// separate input & output
-const inputBox = document.getElementById("inputBox");
-const outputBox = document.getElementById("outputBox");
+// ====== LOCALSTORAGE HELPERS ======
 
-let activeFolderKey = null;
-let activeFileId = null;
-let currentFileMeta = null;
-
-// helpers
-function clearFileActive() {
-  fileList.querySelectorAll(".file-item").forEach((li) => {
-    li.classList.remove("active");
-  });
+function loadUsers() {
+  try {
+    const raw = localStorage.getItem(LS_USERS_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch {
+    return [];
+  }
 }
 
-function resetIOPlaceholders() {
-  if (!inputBox || !outputBox) return;
-  inputBox.value = "";
-  outputBox.value = "";
-  inputBox.readOnly = true;
-  outputBox.readOnly = true;
-  inputBox.placeholder =
-    "Select a file.\nInput (stdin) yahan likhoge.";
-  outputBox.placeholder =
-    "Run ke baad output yahan show hoga.";
+function saveUsers(users) {
+  localStorage.setItem(LS_USERS_KEY, JSON.stringify(users));
 }
 
-function openFolder(folderKey, folderLabel) {
-  activeFolderKey = folderKey;
-  activeFileId = null;
-  currentFileMeta = null;
+function loadCurrentUser() {
+  try {
+    const raw = localStorage.getItem(LS_CURRENT_USER_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
 
-  folderCards.forEach((card) => card.classList.remove("active"));
-  const activeCard = document.querySelector(
-    `.folder-card[data-folder="${folderKey}"]`
-  );
-  if (activeCard) activeCard.classList.add("active");
-
-  const files = SNIPPETS[folderKey] || [];
-  currentFolderName.textContent = folderLabel;
-  currentFolderCount.textContent = files.length ? `${files.length} files` : "";
-
-  fileList.innerHTML = "";
-  if (!files.length) {
-    const li = document.createElement("li");
-    li.className = "file-empty";
-    li.textContent = "No files in this folder yet.";
-    fileList.appendChild(li);
+function saveCurrentUser(user) {
+  if (user) {
+    localStorage.setItem(LS_CURRENT_USER_KEY, JSON.stringify(user));
   } else {
-    files.forEach((file) => {
-      const li = document.createElement("li");
-      li.className = "file-item";
-      li.dataset.fileId = file.id;
+    localStorage.removeItem(LS_CURRENT_USER_KEY);
+  }
+}
 
-      const nameSpan = document.createElement("span");
-      nameSpan.className = "file-name";
-      nameSpan.innerHTML = `<span>📄</span><span>${file.fileName}</span>`;
+function userId(user) {
+  return `${user.email}__${user.dob}`;
+}
 
-      const langTag = document.createElement("span");
-      langTag.className = "file-language-tag";
-      langTag.textContent = file.lang;
+function loadFS() {
+  try {
+    const raw = localStorage.getItem(FS_ROOT_KEY);
+    if (!raw) return {};
+    const obj = JSON.parse(raw);
+    return obj && typeof obj === "object" ? obj : {};
+  } catch {
+    return {};
+  }
+}
 
-      li.appendChild(nameSpan);
-      li.appendChild(langTag);
+function saveFS(fs) {
+  localStorage.setItem(FS_ROOT_KEY, JSON.stringify(fs));
+}
 
-      li.addEventListener("click", () => openFile(file.id));
-      fileList.appendChild(li);
+function loadFilesForUser(user) {
+  const fs = loadFS();
+  const id = userId(user);
+  if (!fs[id] || !Array.isArray(fs[id].files)) return [];
+  return fs[id].files;
+}
+
+function saveFilesForUser(user, files) {
+  const fs = loadFS();
+  const id = userId(user);
+  fs[id] = fs[id] || {};
+  fs[id].files = files;
+  saveFS(fs);
+}
+
+// ====== DEFAULT STARTER FILES PER LANGUAGE ======
+
+function addDefaultFilesIfMissing() {
+  if (!currentUser) return;
+  const now = new Date().toISOString();
+
+  const hasLang = (lang) => currentFiles.some((f) => f.lang === lang);
+
+  // C
+  if (!hasLang("c")) {
+    currentFiles.push({
+      id: `default_c_${Date.now()}`,
+      lang: "c",
+      fileName: "hello.c",
+      code: `#include <stdio.h>
+
+int main() {
+    printf("Hello from C!\\n");
+    return 0;
+}`,
+      stdin: "",
+      createdAt: now,
+      updatedAt: now,
     });
   }
 
-  viewerPlaceholder.classList.remove("hidden");
-  codeContainer.classList.add("hidden");
-  resetIOPlaceholders();
-}
+  // C++
+  if (!hasLang("cpp")) {
+    currentFiles.push({
+      id: `default_cpp_${Date.now() + 1}`,
+      lang: "cpp",
+      fileName: "hello.cpp",
+      code: `#include <bits/stdc++.h>
+using namespace std;
 
-function openFile(fileId) {
-  if (!activeFolderKey) return;
-  const files = SNIPPETS[activeFolderKey] || [];
-  const file = files.find((f) => f.id === fileId);
-  if (!file) return;
-
-  activeFileId = fileId;
-  currentFileMeta = file;
-
-  clearFileActive();
-  const li = fileList.querySelector(`.file-item[data-file-id="${fileId}"]`);
-  if (li) li.classList.add("active");
-
-  viewerPlaceholder.classList.add("hidden");
-  codeContainer.classList.remove("hidden");
-
-  fileNameLabel.textContent = file.fileName;
-  fileLangLabel.textContent = file.lang;
-
-  // readonly view initially
-  codeEditor.classList.add("hidden");
-  codeBlock.parentElement.classList.remove("hidden");
-  editButton.textContent = "✏ Edit";
-
-  codeBlock.className = `code-block language-${file.prismLang}`;
-  codeBlock.textContent = file.code;
-  codeEditor.value = file.code;
-
-  if (window.Prism) {
-    Prism.highlightElement(codeBlock);
+int main() {
+    cout << "Hello from C++!" << endl;
+    return 0;
+}`,
+      stdin: "",
+      createdAt: now,
+      updatedAt: now,
+    });
   }
 
-  // IO behavior
-  if (inputBox && outputBox) {
-    inputBox.value = "";
-    outputBox.value = "";
-
-    const needsInput =
-      typeof file.needsInput === "boolean" ? file.needsInput : true;
-
-    if (needsInput) {
-      inputBox.readOnly = false;
-      inputBox.placeholder =
-        "Yahan input likho (stdin)...\nExample: numbers, testcases etc.";
-      outputBox.readOnly = true;
-      outputBox.placeholder = "Run ke baad output yahan aayega.";
-    } else {
-      inputBox.readOnly = true;
-      inputBox.placeholder =
-        "Is program ko input ki zarurat nahi hai.";
-      outputBox.readOnly = true;
-      outputBox.placeholder = "▶️ Run dabao, output yahan show hoga.";
+  // Java
+  if (!hasLang("java")) {
+    currentFiles.push({
+      id: `default_java_${Date.now() + 2}`,
+      lang: "java",
+      fileName: "Hello.java",
+      code: `public class Hello {
+    public static void main(String[] args) {
+        System.out.println("Hello from Java!");
     }
+}`,
+      stdin: "",
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+
+  // Python
+  if (!hasLang("python")) {
+    currentFiles.push({
+      id: `default_py_${Date.now() + 3}`,
+      lang: "python",
+      fileName: "hello.py",
+      code: `print("Hello from Python!")`,
+      stdin: "",
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+
+  // JavaScript
+  if (!hasLang("javascript")) {
+    currentFiles.push({
+      id: `default_js_${Date.now() + 4}`,
+      lang: "javascript",
+      fileName: "hello.js",
+      code: `console.log("Hello from JavaScript!");`,
+      stdin: "",
+      createdAt: now,
+      updatedAt: now,
+    });
+  }
+
+  // Defaults ko turant save kar do
+  saveFilesForUser(currentUser, currentFiles);
+}
+
+// ====== DOM REFERENCES ======
+
+// auth
+const authSection = document.getElementById("authSection");
+const appSection = document.getElementById("appSection");
+const tabRegister = document.getElementById("tabRegister");
+const tabLogin = document.getElementById("tabLogin");
+
+const registerForm = document.getElementById("registerForm");
+const loginForm = document.getElementById("loginForm");
+const forgotForm = document.getElementById("forgotForm");
+
+const registerStatus = document.getElementById("registerStatus");
+const loginStatus = document.getElementById("loginStatus");
+const forgotStatus = document.getElementById("forgotStatus");
+
+const regName = document.getElementById("regName");
+const regEmail = document.getElementById("regEmail");
+const regDob = document.getElementById("regDob");
+const regPassword = document.getElementById("regPassword");
+
+const loginEmail = document.getElementById("loginEmail");
+const loginPassword = document.getElementById("loginPassword");
+
+const fpEmail = document.getElementById("fpEmail");
+const fpDob = document.getElementById("fpDob");
+const fpNewPassword = document.getElementById("fpNewPassword");
+
+const forgotToggle = document.getElementById("forgotToggle");
+const backToLogin = document.getElementById("backToLogin");
+
+const logoutBtn = document.getElementById("logoutBtn");
+const topbarUser = document.getElementById("topbarUser");
+
+// app
+const langTabs = document.getElementById("langTabs");
+const currentLangLabel = document.getElementById("currentLangLabel");
+const fileListEl = document.getElementById("fileList");
+const newFileBtn = document.getElementById("newFileBtn");
+const openFileBtn = document.getElementById("openFileBtn");
+const openFileSelect = document.getElementById("openFileSelect");
+
+const fileNameInput = document.getElementById("fileNameInput");
+const codeEditor = document.getElementById("codeEditor");
+const inputBox = document.getElementById("inputBox");
+const outputBox = document.getElementById("outputBox");
+const saveFileBtn = document.getElementById("saveFileBtn");
+const runFileBtn = document.getElementById("runFileBtn");
+const deleteFileBtn = document.getElementById("deleteFileBtn");
+const editorStatus = document.getElementById("editorStatus");
+const ownedBadge = document.getElementById("ownedBadge");
+
+// ====== UI HELPERS ======
+
+function showAuth() {
+  authSection.classList.remove("hidden");
+  appSection.classList.add("hidden");
+  logoutBtn.classList.add("hidden");
+  topbarUser.classList.add("hidden");
+}
+
+function showApp() {
+  authSection.classList.add("hidden");
+  appSection.classList.remove("hidden");
+  logoutBtn.classList.remove("hidden");
+  if (topbarUser && currentUser) {
+    topbarUser.textContent = `${currentUser.name} (${currentUser.email})`;
+    topbarUser.classList.remove("hidden");
   }
 }
 
-// folder click listeners
-folderCards.forEach((card) => {
-  card.addEventListener("click", () => {
-    const key = card.dataset.folder;
-    const label =
-      card.querySelector(".folder-name")?.textContent || "Folder";
-    openFolder(key, label);
+// ====== AUTH TAB SWITCH ======
+
+tabRegister.addEventListener("click", () => {
+  tabRegister.classList.add("active");
+  tabLogin.classList.remove("active");
+  registerForm.classList.remove("hidden");
+  loginForm.classList.add("hidden");
+  forgotForm.classList.add("hidden");
+  registerStatus.textContent = "";
+  loginStatus.textContent = "";
+  forgotStatus.textContent = "";
+});
+
+tabLogin.addEventListener("click", () => {
+  tabLogin.classList.add("active");
+  tabRegister.classList.remove("active");
+  loginForm.classList.remove("hidden");
+  registerForm.classList.add("hidden");
+  forgotForm.classList.add("hidden");
+  registerStatus.textContent = "";
+  loginStatus.textContent = "";
+  forgotStatus.textContent = "";
+});
+
+// Forgot password toggle
+forgotToggle.addEventListener("click", () => {
+  loginForm.classList.add("hidden");
+  forgotForm.classList.remove("hidden");
+  forgotStatus.textContent = "";
+});
+
+backToLogin.addEventListener("click", () => {
+  forgotForm.classList.add("hidden");
+  loginForm.classList.remove("hidden");
+  forgotStatus.textContent = "";
+});
+
+// ====== REGISTER ======
+
+registerForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  registerStatus.textContent = "";
+
+  const name = regName.value.trim();
+  const email = regEmail.value.trim().toLowerCase();
+  const dob = regDob.value.trim();
+  const password = regPassword.value;
+
+  if (!name || !email || !dob || !password) {
+    registerStatus.textContent = "Sab field required hain.";
+    return;
+  }
+
+  const users = loadUsers();
+  if (users.some((u) => u.email === email && u.dob === dob)) {
+    registerStatus.textContent =
+      "Ye user pehle se register hai. Sign In karo ya forgot password use karo.";
+    return;
+  }
+
+  const user = { name, email, dob, password };
+  users.push(user);
+  saveUsers(users);
+
+  currentUser = user;
+  saveCurrentUser(user);
+  currentFiles = loadFilesForUser(user);
+
+  registerStatus.textContent = "✅ Account created. Logging in...";
+  initAppAfterLogin();
+});
+
+// ====== LOGIN ======
+
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  loginStatus.textContent = "";
+
+  const email = loginEmail.value.trim().toLowerCase();
+  const password = loginPassword.value;
+
+  if (!email || !password) {
+    loginStatus.textContent = "Email & password required hain.";
+    return;
+  }
+
+  const users = loadUsers();
+  const user = users.find((u) => u.email === email && u.password === password);
+
+  if (!user) {
+    loginStatus.textContent =
+      "Galat credentials. Email/password check karo ya Forgot Password use karo.";
+    return;
+  }
+
+  currentUser = user;
+  saveCurrentUser(user);
+  currentFiles = loadFilesForUser(user);
+
+  loginStatus.textContent = "✅ Logged in.";
+  initAppAfterLogin();
+});
+
+// ====== FORGOT PASSWORD ======
+
+forgotForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  forgotStatus.textContent = "";
+
+  const email = fpEmail.value.trim().toLowerCase();
+  const dob = fpDob.value.trim();
+  const newPassword = fpNewPassword.value;
+
+  if (!email || !dob || !newPassword) {
+    forgotStatus.textContent = "Saare fields required hain.";
+    return;
+  }
+
+  const users = loadUsers();
+  const idx = users.findIndex((u) => u.email === email && u.dob === dob);
+
+  if (idx === -1) {
+    forgotStatus.textContent =
+      "User nahi mila. Email/DOB check karo ya naya account banao.";
+    return;
+  }
+
+  users[idx].password = newPassword;
+  saveUsers(users);
+
+  forgotStatus.textContent = "✅ Password reset ho gaya. Ab login kar sakte ho.";
+});
+
+// ====== LOGOUT ======
+
+logoutBtn.addEventListener("click", () => {
+  currentUser = null;
+  currentFiles = [];
+  currentFileId = null;
+  saveCurrentUser(null);
+  clearEditor();
+  showAuth();
+});
+
+// ====== LANG TABS & FILES ======
+
+function setLang(langKey) {
+  currentLang = langKey;
+
+  langTabs.querySelectorAll(".lang-tab").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.lang === langKey);
+  });
+
+  const label = LANGS[langKey]?.label || langKey.toUpperCase();
+  currentLangLabel.textContent = `${label} Files`;
+
+  renderFileList();
+  clearEditor();
+  populateOpenFileSelect();
+}
+
+langTabs.querySelectorAll(".lang-tab").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const langKey = btn.dataset.lang;
+    setLang(langKey);
   });
 });
 
-// edit toggle
-editButton.addEventListener("click", () => {
-  if (!currentFileMeta) return;
+function renderFileList() {
+  fileListEl.innerHTML = "";
+  const filesForLang = currentFiles.filter((f) => f.lang === currentLang);
 
-  const isCurrentlyViewOnly = codeEditor.classList.contains("hidden");
-  if (isCurrentlyViewOnly) {
-    // go to edit mode
-    codeEditor.value = codeBlock.textContent;
-    codeEditor.classList.remove("hidden");
-    codeBlock.parentElement.classList.add("hidden");
-    editButton.textContent = "👁 View";
-  } else {
-    // back to view mode
-    codeBlock.textContent = codeEditor.value;
-    codeBlock.className = `code-block language-${currentFileMeta.prismLang}`;
-    codeBlock.parentElement.classList.remove("hidden");
-    codeEditor.classList.add("hidden");
-    editButton.textContent = "✏ Edit";
-    if (window.Prism) Prism.highlightElement(codeBlock);
+  if (!filesForLang.length) {
+    const li = document.createElement("li");
+    li.className = "file-empty";
+    li.textContent = "No files yet. New File se create karo.";
+    fileListEl.appendChild(li);
+    return;
+  }
+
+  filesForLang.forEach((file) => {
+    const li = document.createElement("li");
+    li.className = "file-item";
+    li.dataset.id = file.id;
+
+    const nameSpan = document.createElement("span");
+    nameSpan.textContent = file.fileName;
+
+    const timeSpan = document.createElement("span");
+    timeSpan.style.fontSize = "0.72rem";
+    timeSpan.style.color = "#9ca3af";
+    const date = file.updatedAt || file.createdAt;
+    if (date) {
+      const d = new Date(date);
+      timeSpan.textContent = d.toLocaleDateString();
+    } else {
+      timeSpan.textContent = "";
+    }
+
+    li.appendChild(nameSpan);
+    li.appendChild(timeSpan);
+
+    li.addEventListener("click", () => openFile(file.id));
+    fileListEl.appendChild(li);
+  });
+
+  if (currentFileId) {
+    const activeLi = fileListEl.querySelector(
+      `.file-item[data-id="${currentFileId}"]`
+    );
+    if (activeLi) activeLi.classList.add("active");
+  }
+}
+
+function populateOpenFileSelect() {
+  openFileSelect.innerHTML = "";
+  const filesForLang = currentFiles.filter((f) => f.lang === currentLang);
+
+  if (!filesForLang.length) {
+    openFileSelect.classList.add("hidden");
+    return;
+  }
+
+  const defaultOpt = document.createElement("option");
+  defaultOpt.value = "";
+  defaultOpt.textContent = "Select a file to open...";
+  openFileSelect.appendChild(defaultOpt);
+
+  filesForLang.forEach((f) => {
+    const opt = document.createElement("option");
+    opt.value = f.id;
+    opt.textContent = f.fileName;
+    openFileSelect.appendChild(opt);
+  });
+
+  openFileSelect.classList.remove("hidden");
+}
+
+openFileBtn.addEventListener("click", () => {
+  if (openFileSelect.classList.contains("hidden")) {
+    populateOpenFileSelect();
+  }
+  openFileSelect.focus();
+});
+
+openFileSelect.addEventListener("change", () => {
+  const id = openFileSelect.value;
+  if (id) {
+    openFile(id);
   }
 });
 
-// download current file
-downloadButton.addEventListener("click", () => {
-  if (!currentFileMeta) return;
-  const currentCode = codeEditor.classList.contains("hidden")
-    ? codeBlock.textContent
-    : codeEditor.value;
+function openFile(id) {
+  currentFileId = id;
+  const file = currentFiles.find((f) => f.id === id);
+  if (!file) return;
 
-  const blob = new Blob([currentCode], { type: "text/plain;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = currentFileMeta.fileName;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  fileListEl.querySelectorAll(".file-item").forEach((li) => {
+    li.classList.toggle("active", li.dataset.id == id);
+  });
+
+  fileNameInput.value = file.fileName;
+  codeEditor.value = file.code || "";
+  inputBox.value = file.stdin || "";
+  outputBox.value = file.lastOutput || "";
+  editorStatus.textContent = "";
+  ownedBadge.classList.remove("hidden");
+}
+
+function clearEditor() {
+  currentFileId = null;
+  fileListEl.querySelectorAll(".file-item").forEach((li) =>
+    li.classList.remove("active")
+  );
+  fileNameInput.value = "";
+  codeEditor.value = "";
+  inputBox.value = "";
+  outputBox.value = "";
+  editorStatus.textContent = "";
+  ownedBadge.classList.add("hidden");
+}
+
+// ====== NEW FILE ======
+
+newFileBtn.addEventListener("click", () => {
+  clearEditor();
+  editorStatus.textContent =
+    "New file mode: file name + code likho, then Save.";
 });
 
-// run via /run backend API
-runButton.addEventListener("click", async () => {
-  if (!currentFileMeta || !currentFileMeta.runLang || !outputBox) return;
+// ====== SAVE FILE ======
 
-  const isEditing = !codeEditor.classList.contains("hidden");
-  const currentCode = isEditing ? codeEditor.value : codeBlock.textContent;
+saveFileBtn.addEventListener("click", () => {
+  if (!currentUser) {
+    editorStatus.textContent = "Pehle login karo.";
+    return;
+  }
 
-  const needsInput =
-    typeof currentFileMeta.needsInput === "boolean"
-      ? currentFileMeta.needsInput
-      : true;
+  const fileName = fileNameInput.value.trim();
+  const code = codeEditor.value;
+  const stdin = inputBox.value;
 
-  const inputData = needsInput && inputBox ? inputBox.value : "";
+  if (!fileName) {
+    editorStatus.textContent = "File name required hai.";
+    return;
+  }
+  if (!code.trim()) {
+    editorStatus.textContent = "Code khali nahi ho sakta.";
+    return;
+  }
 
-  // before run: show status sirf OUTPUT box me
-  outputBox.readOnly = true;
-  outputBox.value = "⏳ Running...\n";
+  const now = new Date().toISOString();
+
+  if (currentFileId) {
+    const idx = currentFiles.findIndex((f) => f.id === currentFileId);
+    if (idx !== -1) {
+      currentFiles[idx] = {
+        ...currentFiles[idx],
+        fileName,
+        code,
+        stdin,
+        updatedAt: now,
+      };
+    }
+  } else {
+    const id = `f_${Date.now()}`;
+    const newFile = {
+      id,
+      lang: currentLang,
+      fileName,
+      code,
+      stdin,
+      createdAt: now,
+      updatedAt: now,
+    };
+    currentFiles.push(newFile);
+    currentFileId = id;
+  }
+
+  saveFilesForUser(currentUser, currentFiles);
+  renderFileList();
+  populateOpenFileSelect();
+  editorStatus.textContent = "✅ Saved.";
+  ownedBadge.classList.remove("hidden");
+});
+
+// ====== DELETE FILE ======
+
+deleteFileBtn.addEventListener("click", () => {
+  if (!currentFileId) {
+    editorStatus.textContent = "Koi file selected nahi hai.";
+    return;
+  }
+  const idx = currentFiles.findIndex((f) => f.id === currentFileId);
+  if (idx === -1) return;
+
+  currentFiles.splice(idx, 1);
+  saveFilesForUser(currentUser, currentFiles);
+  clearEditor();
+  renderFileList();
+  populateOpenFileSelect();
+  editorStatus.textContent = "🗑 File deleted.";
+});
+
+// ====== RUN FILE (/run API tumhare old format me) ======
+
+runFileBtn.addEventListener("click", async () => {
+  if (!currentUser) {
+    editorStatus.textContent = "Pehle login karo.";
+    return;
+  }
+
+  const langConfig = LANGS[currentLang];
+  if (!langConfig) {
+    editorStatus.textContent = "Language config missing.";
+    return;
+  }
+
+  const code = codeEditor.value;
+  const stdin = inputBox.value;
+
+  if (!code.trim()) {
+    editorStatus.textContent = "Code khali hai. Pehle likho.";
+    return;
+  }
+
+  outputBox.value = "⏳ Running your code...\n";
+  editorStatus.textContent = "";
 
   try {
     const res = await fetch("/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        language: currentFileMeta.runLang, // cpp, c, java, python, javascript...
-        code: currentCode,
-        stdin: inputData,
+        language: langConfig.runLang, // "c", "cpp", "java", "python", "javascript"
+        code,
+        stdin,
       }),
     });
 
@@ -447,18 +654,49 @@ runButton.addEventListener("click", async () => {
 
     if (res.ok && data.success) {
       outputBox.value = (data.output || "").trim() || "(no output)";
+      editorStatus.textContent = "✅ Run successful.";
     } else {
       outputBox.value =
-        "❌ Error:\n" + (data.error || "Execution error / compile error.");
+        "❌ Error:\n" + (data.error || "Execution/compile error.");
+      editorStatus.textContent = "Run error.";
+    }
+
+    if (currentFileId) {
+      const idx = currentFiles.findIndex((f) => f.id === currentFileId);
+      if (idx !== -1) {
+        currentFiles[idx].lastOutput = outputBox.value;
+        saveFilesForUser(currentUser, currentFiles);
+      }
     }
   } catch (err) {
     console.error(err);
     outputBox.value = "❌ Network / server error.";
-  } finally {
-    // input box: sirf needsInput=true wale case me editable rahe
-    if (inputBox) {
-      inputBox.readOnly = !needsInput;
-    }
-    outputBox.readOnly = true;
+    editorStatus.textContent = "Network error.";
+  }
+});
+
+// ====== INIT AFTER LOGIN ======
+
+function initAppAfterLogin() {
+  showApp();
+  currentFiles = loadFilesForUser(currentUser);
+
+  // ⭐ yahan default files ensure ho rahi hain
+  addDefaultFilesIfMissing();
+
+  setLang(currentLang);
+}
+
+// ====== AUTO LOGIN ON LOAD ======
+
+window.addEventListener("DOMContentLoaded", () => {
+  const user = loadCurrentUser();
+  if (user) {
+    currentUser = user;
+    currentFiles = loadFilesForUser(user);
+    addDefaultFilesIfMissing();
+    initAppAfterLogin();
+  } else {
+    showAuth();
   }
 });
