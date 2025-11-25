@@ -2,496 +2,259 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Raviranjan | Portfolio & Code Library</title>
+  <title>CodeVault | Raviranjan Code Workspace</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Prism.js for syntax highlighting -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
-  />
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"
-    defer
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"
-    defer
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"
-    defer
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"
-    defer
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"
-    defer
-  ></script>
-  <script
-    src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"
-    defer
-  ></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Header / Navbar -->
-  <header class="header">
-    <div class="logo-wrap">
-      <!-- 👇 apna logo yahan rakho: assets/logo.png -->
-      <img src="assets/logo.png" alt="Logo" class="logo-img" />
-      <div class="logo-text">RK<span>.</span></div>
-    </div>
-
-    <nav class="nav" id="nav">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#snippets">Code</a>
-      <a href="#certifications">Certifications</a>
-      <a href="#projects">Projects</a>
-      <a href="#skills">Languages</a>
-      <a href="#cp">LeetCode &amp; GFG</a>
-      <a href="#stats">Stats</a>
-      <a href="#timeline">Timeline</a>
-      <a href="#contact">Contact</a>
-    </nav>
-
-    <div class="header-actions">
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
-        🌙
-      </button>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-        ☰
-      </button>
-    </div>
-  </header>
-
-  <!-- Hero -->
-  <section id="home" class="section hero">
-    <div class="hero-content">
-      <p class="hero-eyebrow">Computer Science Student · Developer</p>
-      <h1 id="heroName" class="hero-title"></h1>
-      <p class="hero-text">
-        I build clean, performant applications and love solving DSA problems
-        in C++, Java and more. Explore my projects, coding stats, and a complete
-        code library with an online compiler.
-      </p>
-
-      <div class="hero-cta">
-        <a href="#projects" class="btn primary">View Projects</a>
-        <a href="#snippets" class="btn outline">Open Code Library</a>
-        <a href="assets/Raviranjan_Resume.pdf" class="btn outline" download>
-          Download Resume
-        </a>
+  <div class="app-shell">
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-logo">RV</span>
+        <span class="brand-text">Raviranjan CodeVault</span>
       </div>
-
-      <div class="hero-links">
-        <a href="https://github.com/yourusername" target="_blank">GitHub</a>
-        <a href="https://www.linkedin.com/in/yourprofile" target="_blank"
-          >LinkedIn</a
-        >
-        <a href="https://leetcode.com" target="_blank">LeetCode</a>
-        <a href="https://www.geeksforgeeks.org" target="_blank">GFG</a>
+      <div class="topbar-right">
+        <span id="topbarUser" class="topbar-user hidden"></span>
+        <button id="logoutBtn" class="btn small outline hidden">Logout</button>
       </div>
-    </div>
+    </header>
 
-    <div class="hero-side">
-      <div class="hero-image-frame" id="heroImage">
-        <!-- 👇 apni photo yahan rakho: assets/profile.jpg -->
-        <img
-          src="assets/profile.jpg"
-          alt="Raviranjan"
-          class="hero-image"
-        />
-      </div>
-      <div class="hero-badge">
-        <p>DSA · Backend · Problem Solving</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- About -->
-  <section id="about" class="section section-alt">
-    <h2 class="section-title">About Me</h2>
-    <p class="section-subtitle">
-      I'm a Computer Science student passionate about backend, full-stack
-      development and Data Structures &amp; Algorithms.
-    </p>
-
-    <div class="about-grid">
-      <div class="about-card">
-        <h3>Who am I?</h3>
-        <p>
-          A curious developer who learns by building. I work with C++, Java,
-          JavaScript, Node.js and explore frameworks like Flutter.
-        </p>
-      </div>
-      <div class="about-card">
-        <h3>What I do</h3>
-        <p>
-          Practice DSA (arrays, linked lists, trees, graphs, DP), build full-stack projects,
-          and participate in competitive programming.
-        </p>
-      </div>
-      <div class="about-card">
-        <h3>Goals</h3>
-        <p>
-          Looking for internships &amp; roles where I can contribute to real products,
-          write clean code and grow as a software engineer.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 🔥 Code Library – About ke TURANT niche -->
-  <section id="snippets" class="section">
-    <h2 class="section-title">Code Library &amp; Online Compiler</h2>
-    <p class="section-subtitle">
-      Select a language folder, then choose a file. Input aur Output dono
-      alag sections mein. Input wale program me pehle Input active hoga, phir Output.
-      Jisme input ki need nahi, usme direct Output show hoga.
-    </p>
-
-    <!-- Folder grid -->
-    <div class="folder-grid">
-      <button class="folder-card" data-folder="cpp">
-        <div class="folder-icon">📁</div>
-        <div class="folder-name">C++ Programs</div>
-        <div class="folder-meta">Sorting, Searching, DSA</div>
-      </button>
-      <button class="folder-card" data-folder="c">
-        <div class="folder-icon">📁</div>
-        <div class="folder-name">C Programs</div>
-        <div class="folder-meta">Basics, Arrays</div>
-      </button>
-      <button class="folder-card" data-folder="java">
-        <div class="folder-icon">📁</div>
-        <div class="folder-name">Java Programs</div>
-        <div class="folder-meta">OOP, DSA</div>
-      </button>
-      <button class="folder-card" data-folder="python">
-        <div class="folder-icon">📁</div>
-        <div class="folder-name">Python Scripts</div>
-        <div class="folder-meta">Quick utilities</div>
-      </button>
-      <button class="folder-card" data-folder="javascript">
-        <div class="folder-icon">📁</div>
-        <div class="folder-name">JavaScript</div>
-        <div class="folder-meta">Browser / Logic</div>
-      </button>
-    </div>
-
-    <!-- Code layout -->
-    <div class="code-layout">
-      <!-- Left: file list -->
-      <div class="file-panel">
-        <div class="file-panel-header">
-          <h3 id="currentFolderName">Select a folder</h3>
-          <span id="currentFolderCount" class="file-count"></span>
-        </div>
-        <ul id="fileList" class="file-list">
-          <li class="file-empty">No folder selected.</li>
-        </ul>
-      </div>
-
-      <!-- Right: viewer + IO -->
-      <div class="viewer-panel">
-        <div id="viewerPlaceholder" class="viewer-placeholder">
-          Select a file from the left side to view its code.
-        </div>
-
-        <div id="codeContainer" class="code-container hidden">
-          <div class="code-viewer-header">
-            <div class="code-viewer-title">
-              <span id="fileNameLabel"></span>
-              <span id="fileLangLabel" class="code-lang-pill"></span>
-            </div>
-            <div class="code-viewer-actions">
-              <button id="downloadButton" class="btn small secondary-btn">
-                ⬇ Download
-              </button>
-              <button id="editButton" class="btn small secondary-btn">
-                ✏ Edit
-              </button>
-              <button id="runButton" class="btn small run-btn">
-                ▶️ Run
-              </button>
-            </div>
+    <!-- Main content -->
+    <main class="main">
+      <!-- AUTH SECTION -->
+      <section id="authSection" class="auth-section">
+        <div class="auth-card">
+          <!-- Auth Tabs -->
+          <div class="auth-tabs">
+            <button id="tabRegister" class="auth-tab active">Register</button>
+            <button id="tabLogin" class="auth-tab">Sign In</button>
           </div>
 
-          <!-- Code display / editor -->
-          <div class="code-display">
-            <pre id="codeBlock" class="code-block">
-<code class="language-cpp"></code>
-            </pre>
-            <textarea
-              id="codeEditor"
-              class="code-editor hidden"
-            ></textarea>
-          </div>
+          <!-- REGISTER FORM -->
+          <form id="registerForm" class="auth-form">
+            <h2>Register</h2>
+            <p class="auth-subtitle">
+              Pehli baar aa rahe ho? Apna account banao. Email + DOB future login &amp; password reset ke liye use hoga.
+            </p>
 
-          <!-- Input / Output ALAG-ALAG -->
-          <div class="io-layout">
-            <div class="io-box">
-              <div class="io-title">Input (stdin)</div>
+            <div class="form-group">
+              <label for="regName">Full Name</label>
+              <input
+                type="text"
+                id="regName"
+                required
+                placeholder="Your name"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="regEmail">Email</label>
+              <input
+                type="email"
+                id="regEmail"
+                required
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="regDob">Date of Birth</label>
+              <input type="date" id="regDob" required />
+            </div>
+
+            <div class="form-group">
+              <label for="regPassword">Password</label>
+              <input
+                type="password"
+                id="regPassword"
+                required
+                placeholder="Create a password"
+              />
+            </div>
+
+            <button type="submit" class="btn primary full-width">
+              Create Account
+            </button>
+            <p id="registerStatus" class="form-status"></p>
+          </form>
+
+          <!-- LOGIN FORM -->
+          <form id="loginForm" class="auth-form hidden">
+            <h2>Sign In</h2>
+            <p class="auth-subtitle">
+              Pehle se registered ho? Email + password se login karo.
+            </p>
+
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <input
+                type="email"
+                id="loginEmail"
+                required
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input
+                type="password"
+                id="loginPassword"
+                required
+                placeholder="Your password"
+              />
+            </div>
+
+            <button type="submit" class="btn primary full-width">
+              Sign In
+            </button>
+            <p id="loginStatus" class="form-status"></p>
+
+            <button type="button" id="forgotToggle" class="link-btn">
+              Forgot password?
+            </button>
+          </form>
+
+          <!-- FORGOT PASSWORD FORM -->
+          <form id="forgotForm" class="auth-form hidden">
+            <h2>Reset Password</h2>
+            <p class="auth-subtitle">
+              Apna email aur DOB dal ke password reset kar sakte ho.
+            </p>
+
+            <div class="form-group">
+              <label for="fpEmail">Email</label>
+              <input
+                type="email"
+                id="fpEmail"
+                required
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="fpDob">Date of Birth</label>
+              <input type="date" id="fpDob" required />
+            </div>
+
+            <div class="form-group">
+              <label for="fpNewPassword">New Password</label>
+              <input
+                type="password"
+                id="fpNewPassword"
+                required
+                placeholder="New password"
+              />
+            </div>
+
+            <button type="submit" class="btn primary full-width">
+              Reset Password
+            </button>
+            <p id="forgotStatus" class="form-status"></p>
+
+            <button type="button" id="backToLogin" class="link-btn">
+              ← Back to Login
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- APP SECTION -->
+      <section id="appSection" class="app-section hidden">
+        <!-- Language Tabs -->
+        <div class="lang-tabs" id="langTabs">
+          <button class="lang-tab active" data-lang="c">C</button>
+          <button class="lang-tab" data-lang="cpp">C++</button>
+          <button class="lang-tab" data-lang="java">Java</button>
+          <button class="lang-tab" data-lang="python">Python</button>
+          <button class="lang-tab" data-lang="javascript">JavaScript</button>
+        </div>
+
+        <div class="workspace">
+          <!-- Files panel -->
+          <aside class="files-panel">
+            <div class="files-header">
+              <h3 id="currentLangLabel">C Files</h3>
+              <div class="files-header-actions">
+                <button id="newFileBtn" class="btn small primary">
+                  + New File
+                </button>
+                <button id="openFileBtn" class="btn small outline">
+                  Open File
+                </button>
+              </div>
+            </div>
+
+            <select
+              id="openFileSelect"
+              class="open-select hidden"
+            ></select>
+
+            <ul id="fileList" class="file-list">
+              <!-- files will be injected -->
+            </ul>
+          </aside>
+
+          <!-- Editor panel -->
+          <section class="editor-panel">
+            <div class="editor-top">
+              <div class="form-group editor-filename-group">
+                <label for="fileNameInput">File name</label>
+                <input
+                  type="text"
+                  id="fileNameInput"
+                  placeholder="e.g. main.c"
+                />
+              </div>
+              <span id="ownedBadge" class="owned-badge hidden">⭐ Saved</span>
+            </div>
+
+            <div class="form-group">
+              <label for="codeEditor">Code</label>
               <textarea
-                id="inputBox"
-                class="io-textarea"
-                placeholder="Yahan input likho (stdin)..."
+                id="codeEditor"
+                class="code-textarea"
+                rows="12"
+                placeholder="// Yahan apna code likho..."
               ></textarea>
             </div>
-            <div class="io-box">
-              <div class="io-title">Output</div>
-              <textarea
-                id="outputBox"
-                class="io-textarea"
-                readonly
-                placeholder="Run ke baad output yahan show hoga."
-              ></textarea>
+
+            <div class="io-layout">
+              <div class="io-box">
+                <div class="io-title">Input (stdin)</div>
+                <textarea
+                  id="inputBox"
+                  class="io-textarea"
+                  placeholder="Yahan input likho (optional)..."
+                ></textarea>
+              </div>
+              <div class="io-box">
+                <div class="io-title">Output</div>
+                <textarea
+                  id="outputBox"
+                  class="io-textarea"
+                  readonly
+                  placeholder="Run ke baad output yahan show hoga."
+                ></textarea>
+              </div>
             </div>
-          </div>
+
+            <div class="editor-actions">
+              <button id="saveFileBtn" class="btn small outline">💾 Save</button>
+              <button id="runFileBtn" class="btn small primary">▶ Run</button>
+              <button id="deleteFileBtn" class="btn small outline danger">
+                🗑 Delete
+              </button>
+            </div>
+
+            <p id="editorStatus" class="form-status"></p>
+          </section>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
+    </main>
+  </div>
 
-  <!-- Certifications -->
-  <section id="certifications" class="section section-alt">
-    <h2 class="section-title">Certifications</h2>
-    <div class="grid cards">
-      <article class="card">
-        <h3>Data Structures &amp; Algorithms</h3>
-        <p>Time/space complexity, sorting, searching, trees, graphs, DP.</p>
-      </article>
-      <article class="card">
-        <h3>Web Development</h3>
-        <p>HTML, CSS, JavaScript, responsive design, basic Node.js &amp; APIs.</p>
-      </article>
-      <article class="card">
-        <h3>Problem Solving</h3>
-        <p>Competitive programming, logical reasoning and coding contests.</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- Projects -->
-  <section id="projects" class="section">
-    <h2 class="section-title">Projects</h2>
-    <div class="grid cards">
-      <article class="card">
-        <h3>Portfolio Website</h3>
-        <p>A responsive portfolio with integrated code library and online compiler.</p>
-        <ul class="tags">
-          <li>HTML</li>
-          <li>CSS</li>
-          <li>JavaScript</li>
-          <li>Node.js</li>
-        </ul>
-      </article>
-      <article class="card">
-        <h3>DSA Visualizer</h3>
-        <p>Visualized sorting algorithms and data structures to make learning easy.</p>
-        <ul class="tags">
-          <li>C++</li>
-          <li>Algorithms</li>
-        </ul>
-      </article>
-      <article class="card">
-        <h3>API-based App</h3>
-        <p>Fetched external APIs and displayed data using a clean UI.</p>
-        <ul class="tags">
-          <li>Node.js</li>
-          <li>Express</li>
-        </ul>
-      </article>
-    </div>
-  </section>
-
-  <!-- Skills / Languages -->
-  <section id="skills" class="section section-alt">
-    <h2 class="section-title">Languages &amp; Technologies</h2>
-    <div class="skills-grid">
-      <div>
-        <h3>Programming Languages</h3>
-        <ul class="pill-list">
-          <li>C</li>
-          <li>C++</li>
-          <li>Java</li>
-          <li>Python</li>
-          <li>Dart</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Web &amp; Frameworks</h3>
-        <ul class="pill-list">
-          <li>HTML5</li>
-          <li>CSS3</li>
-          <li>JavaScript</li>
-          <li>Node.js</li>
-          <li>Express</li>
-          <li>Flutter</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Tools &amp; Concepts</h3>
-        <ul class="pill-list">
-          <li>Git &amp; GitHub</li>
-          <li>VS Code</li>
-          <li>Linux</li>
-          <li>OOP</li>
-          <li>DSA</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Problem Solving / CP -->
-  <section id="cp" class="section">
-    <h2 class="section-title">Problem Solving &amp; Competitive Programming</h2>
-    <p class="section-subtitle">
-      My progress on LeetCode and GeeksforGeeks.
-    </p>
-    <div class="cp-wrapper">
-      <div class="cp-card">
-        <h3>LeetCode</h3>
-        <ul class="cp-stats">
-          <li>Username: <span>your_leetcode_username</span></li>
-          <li>Solved: <span>150+ problems</span></li>
-          <li>Focus: Arrays, Strings, DP, Graphs</li>
-        </ul>
-      </div>
-      <div class="cp-card">
-        <h3>GeeksforGeeks</h3>
-        <ul class="cp-stats">
-          <li>Username: <span>your_gfg_username</span></li>
-          <li>Solved: <span>200+ problems</span></li>
-          <li>Focus: DSA, aptitude, interview prep</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats -->
-  <section id="stats" class="section section-alt">
-    <h2 class="section-title">Coding Stats</h2>
-    <div class="stats-grid">
-      <div class="stats-card">
-        <h3>GitHub Activity</h3>
-        <img
-          src="https://github-readme-streak-stats.herokuapp.com/?user=yourusername&theme=tokyonight&hide_border=true"
-          alt="GitHub streak"
-          class="stats-img"
-        />
-      </div>
-      <div class="stats-card">
-        <h3>Top Languages</h3>
-        <img
-          src="https://github-readme-stats.vercel.app/api/top-langs/?username=yourusername&layout=compact&theme=tokyonight&hide_border=true"
-          alt="Top languages"
-          class="stats-img"
-        />
-      </div>
-    </div>
-  </section>
-
-  <!-- Timeline -->
-  <section id="timeline" class="section">
-    <h2 class="section-title">Coding Journey</h2>
-    <div class="timeline">
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-content">
-          <h3>2023 – Started Programming</h3>
-          <p>Learned basics of C and C++, wrote small console programs.</p>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-content">
-          <h3>2024 – DSA &amp; Web Dev</h3>
-          <p>Focus on DSA and built web projects using HTML/CSS/JS.</p>
-        </div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-dot"></div>
-        <div class="timeline-content">
-          <h3>2025 – Projects &amp; Internships</h3>
-          <p>Working on full-stack apps, CP, and preparing for SDE roles.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact" class="section section-alt">
-    <h2 class="section-title">Contact Me</h2>
-    <p class="section-subtitle">
-      Feel free to reach out for internships, projects, or collaboration.
-    </p>
-    <div class="contact-wrapper">
-      <form id="contactForm" class="contact-form">
-        <div class="form-group">
-          <label for="name">Name *</label>
-          <input type="text" id="name" name="name" required placeholder="Your name" />
-        </div>
-        <div class="form-group">
-          <label for="email">Email *</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            placeholder="you@example.com"
-          />
-        </div>
-        <div class="form-group">
-          <label for="message">Message *</label>
-          <textarea
-            id="message"
-            name="message"
-            rows="4"
-            required
-            placeholder="Write your message..."
-          ></textarea>
-        </div>
-        <button type="submit" class="btn primary full-width">Send Message</button>
-        <p id="formStatus" class="form-status"></p>
-      </form>
-
-      <div class="contact-info">
-        <h3>More ways to connect</h3>
-        <ul>
-          <li>
-            📧 Email:
-            <a href="mailto:youremail@example.com">youremail@example.com</a>
-          </li>
-          <li>
-            💼 LinkedIn:
-            <a href="https://www.linkedin.com/in/yourprofile" target="_blank"
-              >linkedin.com/in/yourprofile</a
-            >
-          </li>
-          <li>
-            🐙 GitHub:
-            <a href="https://github.com/yourusername" target="_blank"
-              >github.com/yourusername</a
-            >
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <p>©️ <span id="year"></span> Raviranjan Kumar. All rights reserved.</p>
-  </footer>
-
-  <!-- Main JS -->
   <script src="script.js"></script>
 </body>
 </html>
