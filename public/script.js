@@ -137,8 +137,8 @@ int main() {
     currentFiles.push({
       id: `default_java_${Date.now() + 2}`,
       lang: "java",
-      fileName: "Hello.java",
-      code: `public class Hello {
+      fileName: "Main.java",
+      code: `public class Main {
     public static void main(String[] args) {
         System.out.println("Hello from Java!");
     }
